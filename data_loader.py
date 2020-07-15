@@ -134,7 +134,7 @@ class train_loader:
             im4 = torch.from_numpy(np.array(imgcrop4, dtype=np.float32).transpose((1,0)))
             
 
-            ''' Ultrasound Image is grey, no RGB channel    
+            ''' Ultrasound Image has only one color channel   
             ## Channel Splitting
             rgb = random.randint(0,2)
             im1 = im1[:,:,rgb]
