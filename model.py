@@ -36,14 +36,14 @@ class OrderNetwork(nn.Module):
             nn.MaxPool2d(3, 2),
         )
         self.fc6 = nn.Sequential(
-            nn.Linear(3*3*256, 1024),
-            nn.BatchNorm2d(1024),
+            nn.Linear(1*1*256, 1024),
+            nn.BatchNorm1d(1024),
             nn.ReLU(inplace = True),
             nn.Dropout2d(p=0.5)
         )
         self.fc7 = nn.Sequential(
             nn.Linear(1024*2, 512),
-            nn.BatchNorm2d(512),
+            nn.BatchNorm1d(512),
             nn.ReLU(inplace = True),
             nn.Dropout2d(p=0.5)
         )       
@@ -61,6 +61,7 @@ class OrderNetwork(nn.Module):
         f6 = self.fc6(x)
         return f6
 
+    
     def forward(self, input1, input2, input3, input4):
         f6_1 = self.forward_once(input1)
         f6_2 = self.forward_once(input2)
@@ -72,9 +73,9 @@ class OrderNetwork(nn.Module):
         f7_4 = self.fc7(torch.cat((f6_2,f6_3),1))
         f7_5 = self.fc7(torch.cat((f6_2,f6_4),1))
         f7_6 = self.fc7(torch.cat((f6_3,f6_4),1))
-        output = self.fc8(torch.cat((f7_1,f7_2,f7_3,f7_4,f7_4,f7_5,f7_6),1))
-
+        output = self.fc8(torch.cat((f7_1,f7_2,f7_3,f7_4,f7_5,f7_6),1))
         return output
 
-Onet = OrderNetwork()
+
+import pdb; pdb.set_trace()
 
