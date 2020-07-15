@@ -14,8 +14,7 @@ from model import OrderNetwork
 
 
 class Solver(object):
-    def __init__(self,config,train_data):
-        self.train_data = train_data
+    def __init__(self,config):
         self.onet = None
         self.optimizer = None
         self.train_iter = config.train_iter
@@ -30,36 +29,36 @@ class Solver(object):
     def reset_grad(self):
         self.optimizer.zero_grad()
 
-    def train(self):
+    def train(self,train_data):
 
-        self.onet = OrderNetwork()
-        params = list(self.onet.parameters())
+        onet = OrderNetwork()
+        params = list(onet.parameters())
         self.optimizer = optim.Adam(params, self.lr, [self.beta1,self.beta2])
 
-        if torch.cuda.is_available():
-            self.onet.cuda()
 
-        idx_pool = list(range(self.train_data[0].shape[0]))
+        device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        onet.to(device)
+
+        running_loss = 0.0
+        idx_pool = list(range(train_data[0].shape[0]))
+
         for step in range(self.train_iter + 1):
             idx = random.sample(idx_pool,self.batch_size)
             idx_pool = [i for j, i in enumerate(idx_pool) if j not in idx]
             if len(idx_pool) < self.batch_size:
-                idx_pool = list(range(self.train_data[0].shape[0]))
+                idx_pool = list(range(train_data[0].shape[0]))
 
-            input1 = self.train_data[0][idx]
-            input2 = self.train_data[1][idx]
-            input3 = self.train_data[2][idx]
-            input4 = self.train_data[3][idx]
-            label = self.train_data[4][idx]
-
-            if torch.cuda.is_available():
-                input1, input2, input3, input4, label = Variable(input1).cuda(), Variable(input2).cuda(), Variable(input3).cuda(), Variable(input4).cuda, Variable(label).cuda()
+            input1 = train_data[0][idx].to(device)
+            input2 = train_data[1][idx].to(device)
+            input3 = train_data[2][idx].to(device)
+            input4 = train_data[3][idx].to(device)
+            label = train_data[4][idx].to(device)
 
             # ========Train Onet==========
             self.optimizer.zero_grad()
 
-            output = self.onet(input1,input2,input3,input4)
-            loss = nn.CrossEntropyLoss(output,label)
+            output = onet(input1,input2,input3,input4)
+            loss = nn.CrossEntropyLoss()(output,label.long())
             loss.backward()
             self.optimizer.step()
 
@@ -67,11 +66,11 @@ class Solver(object):
             running_loss += loss.item()
             if (step + 1) % self.log_step == 0:
                 print('Step [%d/%d], loss: %.3f'
-                      %(step+1, self.train_iters, running_loss/self.log_step))
+                      %(step+1, self.train_iter, running_loss/self.log_step))
                 running_loss = 0.00
 
             
             if (step+1) % 20 == 0:
                 # save the model parameters for each epoch
                 onet_path = os.path.join(self.model_path, 'iter-%d.pkl' %(step+1))
-                torch.save(self.onet.state_dict(), onet_path)
+                torch.save(onet.state_dict(), onet_path)

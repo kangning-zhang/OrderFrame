@@ -7,14 +7,14 @@ from data_loader import train_loader
 
 def main(config):
     train_data = train_loader(config).load()
-    solver = Solver(config, train_data)
+    solver = Solver(config)
     cudnn.benchmark = True 
     
     # create directories if not exist
     if not os.path.exists(config.model_path):
         os.makedirs(config.model_path)
         
-    solver.train()
+    solver.train(train_data)
 
 
 
