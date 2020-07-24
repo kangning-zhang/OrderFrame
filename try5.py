@@ -68,12 +68,6 @@ class PulseDataset(Dataset):
     
     def __getitem__(self,idx):
 
-        #frame1_idx = torch.from_numpy(np.array(self.frame1)[idx])
-        #frame2_idx = torch.from_numpy(np.array(self.frame2)[idx])
-        #frame3_idx = torch.from_numpy(np.array(self.frame3)[idx])
-        #frame4_idx = torch.from_numpy(np.array(self.frame4)[idx])
-        #label_idx = torch.as_tensor(np.array(self.label)[idx])
-
         frame1_idx = np.array(self.frame1)[idx]
         frame2_idx = np.array(self.frame2)[idx]
         frame3_idx = np.array(self.frame3)[idx]
@@ -157,6 +151,40 @@ for i, (frame1, frame2, frame3, frame4, label) in enumerate(trainloader):
 
 
 
+''' 
+Error msg:
 
 
+Traceback (most recent call last):
+  File "/home/jesu2953/anaconda3/envs/pytorch/lib/python3.6/site-packages/torch/utils/data/dataloader.py", line 761, in _try_get_data
+    data = self._data_queue.get(timeout=timeout)
+  File "/home/jesu2953/anaconda3/envs/pytorch/lib/python3.6/multiprocessing/queues.py", line 104, in get
+    if not self._poll(timeout):
+  File "/home/jesu2953/anaconda3/envs/pytorch/lib/python3.6/multiprocessing/connection.py", line 257, in poll
+    return self._poll(timeout)
+  File "/home/jesu2953/anaconda3/envs/pytorch/lib/python3.6/multiprocessing/connection.py", line 414, in _poll
+    r = wait([self], timeout)
+  File "/home/jesu2953/anaconda3/envs/pytorch/lib/python3.6/multiprocessing/connection.py", line 911, in wait
+    ready = selector.select(timeout)
+  File "/home/jesu2953/anaconda3/envs/pytorch/lib/python3.6/selectors.py", line 376, in select
+    fd_event_list = self._poll.poll(timeout)
+  File "/home/jesu2953/anaconda3/envs/pytorch/lib/python3.6/site-packages/torch/utils/data/_utils/signal_handling.py", line 66, in handler
+    _error_if_any_worker_fails()
+RuntimeError: DataLoader worker (pid 14270) is killed by signal: Killed. 
 
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "try5.py", line 142, in <module>
+    
+  File "/home/jesu2953/anaconda3/envs/pytorch/lib/python3.6/site-packages/torch/utils/data/dataloader.py", line 345, in __next__
+    data = self._next_data()
+  File "/home/jesu2953/anaconda3/envs/pytorch/lib/python3.6/site-packages/torch/utils/data/dataloader.py", line 841, in _next_data
+    idx, data = self._get_data()
+  File "/home/jesu2953/anaconda3/envs/pytorch/lib/python3.6/site-packages/torch/utils/data/dataloader.py", line 808, in _get_data
+    success, data = self._try_get_data()
+  File "/home/jesu2953/anaconda3/envs/pytorch/lib/python3.6/site-packages/torch/utils/data/dataloader.py", line 774, in _try_get_data
+    raise RuntimeError('DataLoader worker (pid(s) {}) exited unexpectedly'.format(pids_str))
+RuntimeError: DataLoader worker (pid(s) 14270) exited unexpectedly
+
+'''
