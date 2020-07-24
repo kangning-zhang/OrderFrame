@@ -62,10 +62,6 @@ class PulseDataset(Dataset):
                 
             self.label.append(order)
 
-         
-        print(cnt,"id in totoal")
-
-        #import pdb; pdb.set_trace()
 
     def __len__(self):
         return len(self.framelist)
