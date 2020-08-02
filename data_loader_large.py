@@ -68,8 +68,8 @@ class PulseDataset(Dataset):
         img4 = Image.open(fname4)
 
         postproc = [
-            transforms.CenterCrop((450,350)),
-            transforms.Resize((315,245))
+            transforms.CenterCrop((350,450)),
+            transforms.Resize((245,315))
         ]
 
         self.postproc = transforms.Compose(postproc)
@@ -78,6 +78,7 @@ class PulseDataset(Dataset):
         img2 = self.postproc(img2)
         img3 = self.postproc(img3)
         img4 = self.postproc(img4)
+
 
         if mirror == 1:
             img1 = img1.transpose(Image.FLIP_LEFT_RIGHT)
